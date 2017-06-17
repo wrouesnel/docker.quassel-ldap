@@ -125,6 +125,30 @@ if [ $(stdbool $DEV_QUASSEL_DEBUG) == "y" ] ; then
     QUASSEL_EXTRA_OPTS="--debug $QUASSEL_EXTRA_OPTS"
 fi
 
+log "Ensuring SSL_DIR is mounted in..."
+if ! mountpoint "$SSL_DIR" ; then
+    echoerr "SSL_DIR is not a mountpoint ($SSL_DIR)."
+    exit 1
+fi
+
+ABS_SSL_CERT_PATH="${SSL_DIR}/${SSL_CERT_NAME}"
+ABS_SSL_KEY_PATH="${SSL_DIR}/${SSL_KEY_NAME}"
+
+log "Ensuring SSL_CERT is reachable..."
+if [ ! -e "${ABS_SSL_CERT_PATH}" ]; then
+    echoerr "SSL certificate cannot be found at ${ABS_SSL_CERT_PATH}"
+    exit 1
+fi 
+
+log "Ensuring SSL_KEY is reachable..."
+if [ ! -e "${ABS_SSL_KEY_PATH}" ]; then
+    echoerr "SSL key cannot be found at ${ABS_SSL_KEY_PATH}"
+    exit 1
+fi
+
 log "Setup successful. Starting Quassel Core."
 exec quasselcore $QUASSEL_EXTRA_OPTS \
+    --require-ssl \
+    --ssl-cert "${ABS_SSL_CERT_PATH}" \
+    --ssl-key "${ABS_SSL_KEY_PATH}" \
     --configdir "$QUASSEL_CONFIG_DIR"

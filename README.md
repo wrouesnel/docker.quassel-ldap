@@ -20,11 +20,10 @@ The server listens on port `4242/tcp`.
 * `LDAP_BASE_DN` Search base DN of the LDAP server.
 * `LDAP_FILTER` Search filter for user accounts on the LDAP server e.g. `(objectClass=posixAccount)`
 * `LDAP_UID_ATTR` UID attribute to use for finding user accounts. e.g. `uid`
+* `SSL_CERT` Required. Either a literal certificate or the path to a certificate.
+* `SSL_KEY` Required. Either a literal key or the path to a key in the container.
 
 ### Debug Environment
 * `DEV_ALLOW_EPHEMERAL_DATA` Default `no`. Disables the check for a mounted `DATA_DIR` directory.
 * `DEV_QUASSEL_DEBUG` Default `no`. Sets the `--debug` flag when Quassel is launched.
 
-Explicitely does not configure SSL as it expects to be proxied by an nginx
-instance in TCP proxy mode doing SSL termination (since that instance maintains
-the LetsEncrypt certificates which secure it).

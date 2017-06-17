@@ -44,7 +44,10 @@ ENV \
     LDAP_BIND_PASSWORD= \
     LDAP_BASE_DN= \
     LDAP_FILTER= \
-    LDAP_UID_ATTR=
+    LDAP_UID_ATTR= \
+    SSL_DIR= \
+    SSL_CERT_NAME= \
+    SSL_KEY_NAME=
 
 EXPOSE 4242/tcp
 
