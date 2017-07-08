@@ -1,6 +1,12 @@
 sudo: required
 services:
 - docker
+before_install:
+- curl -fsSL http://apt.dockerproject.org/gpg | sudo apt-key add -
+- sudo add-apt-repository "deb https://apt.dockerproject.org/repo ubuntu-$(lsb_release -cs) main"
+- sudo apt-get update
+- sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
+
 script:
 - export TAG=$TRAVIS_BUILD_NUMBER
 - make all
