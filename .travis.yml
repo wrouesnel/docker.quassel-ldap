@@ -1,0 +1,16 @@
+sudo: required
+services:
+- docker
+script:
+- export TAG=$TRAVIS_BUILD_NUMBER
+- make all
+- docker tag $(cat .dockerid) $DOCKER_IMAGE:$TAG
+after_success:
+- |-
+  if [ $TRAVIS_PULL_REQUEST != "true" ]; then docker login -u $DOCKER_USER -p $DOCKER_PASS ; export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi` ;
+  docker tag $DOCKER_IMAGE:$TRAVIS_BUILD_NUMBER $DOCKER_IMAGE:$TAG ; if [ ! -z "$TRAVIS_TAG" ]; then docker tag $DOCKER_IMAGE:$TRAVIS_BUILD_NUMBER $DOCKER_IMAGE:$TRAVIS_TAG ; fi ; docker rmi $DOCKER_IMAGE:$TRAVIS_BUILD_NUMBER ; docker push $DOCKER_IMAGE ; fi
+env:
+  global:
+  - DOCKER_IMAGE=wrouesnel/quassel-ldap
+  - secure: Oy+slv6rPDJfdj8xsae7aRg6Hj8xscpmu+2VoiyPcXSdPnJVCYuRSiZeUyMnG3LCvLRrq8XQyFyzvpyGLHXM1oCEorfcmEsIOQPMBqz9QxHa92/xuzU7gagj0RZHDQ5NgVRUOP/qzV0222megYiL8204jQixuu+7fMPG5CwQbr2bR6bmD/25aZsPzxPKlegcea8+HiiAeDz3OOmhRIo019nCptzzd6zhuUXj+v+UxN8gp1y+HxbIBGGIKDi73ZuFY2IUuKcaM4I3O6HRlCW/ETBLfhKcJsX+MznZlBGAjvKk5ACWwyexZTCdFF/87vjkYwkNcscG3+Zp7Qeubi2mSVGko57jtgP9Bh4mQFIUEzPYo6kfj36JuhsyAkmyuHT0DfKN9mC13hQRgeEzo08duYe2ep7cwg5/7UJuVMjl5vMcbP8bYmoldir/E2OEO5FEsh6avdyBZsLVf47P2OLz/fhgnVqIn7zmqsBh6Nos3CNwLtGvhl69H69njNNfJ7M6qn4ENwo15zwC34mAC4chnfFfN6ZIopGRpEhWeEfXdaHUmcgnnTemosi81PfzJiOSjE6DmOLkkcANpU+XVHlYAHSOJUFFvbNogM1obzLYtIni32zB8bQr822hqfbGAXUn4+fJ63+9lRcif5I48gQb1HDqaf3cHXs4z0i1j9jMxMY=
+  - secure: UZYQBm9WvrE9RCosoQvxYEZB2DqWIZweOOb+REBNLjAb0hQ/SpVj8rakquUAflMV527kRSts39kaPOF5AupHUCaRqd0hyc//Ckz0gVJ5ISvmjnSxZsrwUk61btvvqcewgpCkNYutkl4XBpH7ny2/q0pAylkgTyn2YxSP8kPVTPTLXfotQdKT6JP6XHYfg6+kFHC+7jJ60vIhKOMbF+Fu7fvvIJ84fU7OPu2Gcj8+1/xOjDYnpMypd9DEZEZnRA/sDLLdBwd7GIbiTYCjK9teNYx898sXyEuUotNXd1DjGwQ5yZD09cia3EwQJe5YTAKsGj6dXRPwocahxHRYB0Si/OMzTDzTwFCvpPL6gQBUgv78kYg6OWOicHAL3bbLiM5MVrwQOcOp60974Awnf5nnB0FKj+hT1VhAizdFRpGo3/9wvbQVYeNItdZT4S9Q887J6QQHzolgdtiWPQsjcP26IiAJiLvgbugQ3EIaDpClUmYuOK6N6CblwY937YqlmlLR8UCsE42cJ/COuGFv9a614EPe9GtKxD8bu1AhA8eXVDXgCty7GJFhB4/KNxrSJ1TjHgSmRL5s+ijv1ygo83/VSICaa5i74fUeSHQBTWw6QL55S9ezgm6D6To+VgPaYFt4zAmq7oxP0904YaiTxv48p2CLq9jAYBCrEW2rM64jOKU=
