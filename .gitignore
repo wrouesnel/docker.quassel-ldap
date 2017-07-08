@@ -1,1 +1,4 @@
-test.env
+/test.env
+/tmp
+/.docker.log
+/.dockerid

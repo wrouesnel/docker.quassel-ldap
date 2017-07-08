@@ -11,7 +11,7 @@ CIDFILE = .cidfile
 all: .dockerid
 
 .dockerid: $(SRC)
-	docker build $(DOCKER_BUILD_ARGS) $(EXTRA_BUILD_ARGS) . | tee .docker.log
+	docker build $(DOCKER_BUILD_ARGS) $(EXTRA_BUILD_ARGS) quassel-ldap | tee .docker.log
 	docker inspect -f '{{ .Id }}' `tail -n1 .docker.log | cut -d' ' -f3` > $@ || ( rm -f .dockerid ; exit 1 )
 
 run-it: .dockerid
